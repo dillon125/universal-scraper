@@ -1,0 +1,8 @@
+.render.yaml
+services:
+  - type: cron
+    name: universal-scraper
+    env: python
+    schedule: "0 14 * * *"  # every day at 10 AM EST
+    buildCommand: ""
+    startCommand: "python main.py"
