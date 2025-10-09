@@ -1,13 +1,25 @@
 name: Run Scraper
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"  # every 30 minutes
   workflow_dispatch:
+    inputs:
+      query:
+        description: "Search query for scraper"
+        required: true
+        default: "example search"
+      max:
+        description: "Maximum number of results (optional)"
+        required: false
+        default: "10"
+      out:
+        description: "Output filename (optional)"
+        required: false
+        default: "results.json"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -20,7 +32,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run main script
-        run: python main.py
+        run: |
+          echo "Running scraper with query: ${{ github.event.inputs.query }}"
+          python main.py --query "${{ github.event.inputs.query }}" --max "${{ github.event.input
